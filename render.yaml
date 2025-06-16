@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: perfectpawls-api
+    runtime: python
+    buildCommand: ""
+    startCommand: python app.py
+    envVars:
+      - key: MONGO_URI
+        value: mongodb+srv://eliose121:perfectpawlsdb@perfectpawlsdb.odf3ljg.mongodb.net/test?retryWrites=true&w=majority
+      - key: JWT_SECRET
+        value: 6466086911064140
