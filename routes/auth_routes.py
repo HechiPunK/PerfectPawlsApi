@@ -33,7 +33,11 @@ def login():
         return jsonify({'message': 'Credenciales inválidas'}), 401
 
     token = generate_token(user['_id'], current_app.config['JWT_SECRET'])
-    return jsonify({'token': token, 'email': user['email']}), 200
+    return jsonify({
+        'token': token,
+        'email': user['email'],
+        'username': user['username']  
+    }), 200
 
 @auth_bp.route('/protected', methods=['GET'])
 @token_required
