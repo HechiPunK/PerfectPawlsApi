@@ -10,13 +10,14 @@ auth_bp = Blueprint('auth', __name__)
 def register():
     data = request.get_json()
     email = data.get('email')
+    username = data.get('username') 
     password = data.get('password')
     
     db = current_app.config['DB']
     if find_user_by_email(db, email):
         return jsonify({'message': 'El usuario ya existe'}), 400
 
-    user = create_user(db, email, password)
+    user = create_user(db, email, username, password)
     return jsonify({'message': 'Usuario registrado con éxito', 'email': user['email']}), 201
 
 @auth_bp.route('/login', methods=['POST'])
