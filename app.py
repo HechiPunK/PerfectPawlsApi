@@ -4,11 +4,10 @@ from datetime import datetime
 from flask_cors import CORS
 from pymongo import MongoClient
 from gridfs import GridFS
-from flask.json.provider import JSONProvider  # <-- Cambio importante
+from flask.json.provider import JSONProvider
 import json
 import config
 
-# Clase personalizada para manejar la serialización
 class MongoJSONProvider(JSONProvider):
     def dumps(self, obj, **kwargs):
         return json.dumps(obj, default=self.default, **kwargs)
