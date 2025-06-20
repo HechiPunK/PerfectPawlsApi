@@ -17,6 +17,9 @@ def list_pets():
         pet['_id'] = str(pet['_id'])
         if 'photo_id' in pet and pet['photo_id']:
             pet['photo_url'] = f"/api/catalog/pets/{pet['_id']}/photo"
+            del pet['photo_id']
+        elif 'photo_id' in pet:
+            del pet['photo_id']
     
     return jsonify(pets), 200
 
@@ -42,9 +45,12 @@ def add_pet(user_id):
             available=data.get('available', 'true').lower() == 'true',
             user_id=user_id
         )
-        
         pet['_id'] = str(pet['_id'])
-        pet['photo_url'] = f"/api/catalog/pets/{pet['_id']}/photo"
+        if 'photo_id' in pet and pet['photo_id']:
+            pet['photo_url'] = f"/api/catalog/pets/{pet['_id']}/photo"
+            del pet['photo_id']
+        elif 'photo_id' in pet:
+            del pet['photo_id']
         return jsonify(pet), 201
         
     except ValueError as e:  # Captura errores de validación
@@ -80,8 +86,11 @@ def edit_pet(user_id, pet_id):
         return jsonify({"message": "Mascota no encontrada"}), 404
     
     updated_pet['_id'] = str(updated_pet['_id'])
-    if 'photo_id' in updated_pet:
+    if 'photo_id' in updated_pet and updated_pet['photo_id']:
         updated_pet['photo_url'] = f"/api/catalog/pets/{pet_id}/photo"
+        del updated_pet['photo_id']
+    elif 'photo_id' in updated_pet:
+        del updated_pet['photo_id']
     return jsonify(updated_pet), 200
 
 @catalog_bp.route('/pets/<pet_id>', methods=['DELETE'])
@@ -107,6 +116,9 @@ def user_pets(user_id):
         pet['_id'] = str(pet['_id'])
         if 'photo_id' in pet and pet['photo_id']:
             pet['photo_url'] = f"/api/catalog/pets/{pet['_id']}/photo"
+            del pet['photo_id']
+        elif 'photo_id' in pet:
+            del pet['photo_id']
     
     return jsonify(pets), 200
 
