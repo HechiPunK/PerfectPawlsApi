@@ -23,7 +23,7 @@ class MongoJSONProvider(JSONProvider):
         raise TypeError(f'Object of type {o.__class__.__name__} is not JSON serializable')
 
 from routes.auth_routes import auth_bp
-from routes.catalog_routes import catalog_bp
+from routes.chatbot_routes import chatbot_bp
 
 app = Flask(__name__)
 app.json = MongoJSONProvider(app) 
@@ -43,7 +43,7 @@ app.config['JWT_SECRET'] = config.JWT_SECRET
 
 # Registro de Blueprints
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
-app.register_blueprint(catalog_bp, url_prefix='/api/catalog')
+app.register_blueprint(chatbot_bp, url_prefix='/api/chatbot')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
