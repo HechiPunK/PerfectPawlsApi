@@ -1,49 +1,27 @@
 from flask import Flask
-from bson import ObjectId
-from datetime import datetime
 from flask_cors import CORS
 from pymongo import MongoClient
-from gridfs import GridFS
-from flask.json.provider import JSONProvider
-import json
 import config
 
-class MongoJSONProvider(JSONProvider):
-    def dumps(self, obj, **kwargs):
-        return json.dumps(obj, default=self.default, **kwargs)
-
-    def loads(self, s, **kwargs):
-        return json.loads(s, **kwargs)
-
-    def default(self, o):
-        if isinstance(o, ObjectId):
-            return str(o)
-        if isinstance(o, datetime):
-            return o.isoformat()
-        raise TypeError(f'Object of type {o.__class__.__name__} is not JSON serializable')
-
+# Importación de Blueprints para las rutas principales de la API
 from routes.auth_routes import auth_bp
 from routes.chatbot_routes import chatbot_bp
+from routes.image_routes import image_bp
 
 app = Flask(__name__)
-app.json = MongoJSONProvider(app) 
-CORS(app)
+CORS(app)  # Habilita CORS para permitir peticiones desde otros orígenes
 
-# Conexión con MongoDB
+# Conexión con MongoDB usando la URI definida en config.py
 client = MongoClient(config.MONGO_URI)
-db = client.get_database()
+db = client.get_database()  # Obtiene la base de datos por defecto de la URI
+app.config['DB'] = db  # Guarda la instancia de la base de datos en la configuración de la app
+app.config['JWT_SECRET'] = config.JWT_SECRET  # Guarda el secreto JWT en la configuración
 
-# Configuración de GridFS para almacenar archivos
-fs = GridFS(db)
+# Registro de Blueprints para organizar las rutas de la API
+app.register_blueprint(auth_bp, url_prefix='/api/auth')      # Rutas de autenticación
+app.register_blueprint(chatbot_bp, url_prefix='/api/chatbot') # Rutas del chatbot
+app.register_blueprint(image_bp, url_prefix='/api')           # Rutas de imágenes
 
-# Guardamos la BD en la app para que todos los módulos puedan accederla
-app.config['DB'] = db
-app.config['FS'] = fs
-app.config['JWT_SECRET'] = config.JWT_SECRET
-
-# Registro de Blueprints
-app.register_blueprint(auth_bp, url_prefix='/api/auth')
-app.register_blueprint(chatbot_bp, url_prefix='/api/chatbot')
-
+# Inicializa la aplicación Flask
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
