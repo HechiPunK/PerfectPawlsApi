@@ -2,7 +2,7 @@ from flask import current_app
 
 def obtener_imagenes():
     db = current_app.config['DB']
-    documentos = db.image_logs.find()
+    documentos = db.images.find()
     imagenes = []
     for doc in documentos:
         imagenes.append({
