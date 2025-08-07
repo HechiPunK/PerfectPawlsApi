@@ -7,6 +7,7 @@ import config
 from routes.auth_routes import auth_bp
 from routes.chatbot_routes import chatbot_bp
 from routes.image_routes import image_bp
+from routes.stats_routes import stats_bp
 
 app = Flask(__name__)
 CORS(app)  # Habilita CORS para permitir peticiones desde otros orígenes
@@ -21,6 +22,7 @@ app.config['JWT_SECRET'] = config.JWT_SECRET  # Guarda el secreto JWT en la conf
 app.register_blueprint(auth_bp, url_prefix='/api/auth')      # Rutas de autenticación
 app.register_blueprint(chatbot_bp, url_prefix='/api/chatbot') # Rutas del chatbot
 app.register_blueprint(image_bp, url_prefix='/api')           # Rutas de imágenes
+app.register_blueprint(stats_bp, url_prefix='/api/statistics') # Rutas de estadísticas
 
 # Inicializa la aplicación Flask
 if __name__ == '__main__':
