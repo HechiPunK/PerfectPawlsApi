@@ -8,6 +8,6 @@ def obtener_imagenes():
         imagenes.append({
             "id": str(doc["_id"]),
             "fecha": doc.get("fecha"),
-            "imagen_b64": doc.get("imagen_b64")
+            "imagen_base64": doc.get("imagen_base64")
         })
     return imagenes
